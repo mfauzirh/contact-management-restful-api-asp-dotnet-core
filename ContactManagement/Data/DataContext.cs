@@ -9,7 +9,7 @@ public class DataContext : DbContext
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
-    public DataContext(DbContextOptions<DataContext> options) : base() { }
+    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +33,11 @@ public class DataContext : DbContext
         modelBuilder.Entity<Contact>(entity =>
         {
             entity.HasKey(e => e.Id);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Contact)
+                .HasForeignKey(e => e.UserName)
+                .IsRequired();
 
             entity.Property(e => e.FirstName)
                 .HasMaxLength(100)
