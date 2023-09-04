@@ -24,10 +24,8 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public async Task<Response<UserGetDto>> Register(UserRegisterDto registerUser)
+    public async Task<UserResponseDto> Register(UserRegisterDto registerUser)
     {
-        var response = new Response<UserGetDto>();
-
         if (await UserExists(registerUser.UserName))
         {
             throw new ResponseException(HttpStatusCode.Conflict, $"User with username {registerUser.UserName} is already exists.");
@@ -35,18 +33,13 @@ public class AuthService : IAuthService
 
         registerUser.Password = Bcrypt.HashPassword(registerUser.Password);
 
-        User user = _mapper.Map<User>(registerUser);
+        User registeredUser = await _userRepository.AddAsync(_mapper.Map<User>(registerUser));
 
-        User registeredUser = await _userRepository.AddAsync(user);
-        response.Data = _mapper.Map<UserGetDto>(registeredUser);
-
-        return response;
+        return _mapper.Map<UserResponseDto>(registeredUser);
     }
 
-    public async Task<Response<string>> Login(UserLoginDto loginUser)
+    public async Task<string> Login(UserLoginDto loginUser)
     {
-        var response = new Response<string>();
-
         User? user = await _userRepository.GetAsync(loginUser.UserName);
 
         if (user is null)
@@ -60,9 +53,8 @@ public class AuthService : IAuthService
         }
 
         string token = CreateToken(user);
-        response.Data = token;
 
-        return response;
+        return token;
     }
 
     public async Task<bool> UserExists(string userName)

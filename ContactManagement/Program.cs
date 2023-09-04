@@ -1,9 +1,7 @@
 using ContactManagement.Data;
-using ContactManagement.Dtos;
 using ContactManagement.Models;
 using ContactManagement.Repositories;
 using ContactManagement.Services;
-using ContactManagement.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -69,9 +67,9 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(build
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddScoped<IValidator<UserRegisterDto>, UserRegisterValidator>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
