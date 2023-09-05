@@ -17,4 +17,9 @@ public class ContactRepository : IContactRepository
         await _context.SaveChangesAsync();
         return contact;
     }
+
+    public async Task<Contact?> GetAsync(int contactId)
+    {
+        return await _context.Contacts.FindAsync(contactId);
+    }
 }

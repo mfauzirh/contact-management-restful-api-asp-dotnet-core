@@ -24,11 +24,24 @@ public class ContactController : ControllerBase
     {
         var userName = HttpContext.Items["userName"] as string;
 
-        var response = new Response<ContactResponseDto>()
+        var response = new Response<ContactResponseDto>
         {
             Data = await _contactService.AddAsync(userName!, request)
         };
 
         return StatusCode((int)HttpStatusCode.Created, response);
+    }
+
+    [HttpGet("{contactId}")]
+    public async Task<ActionResult<Response<ContactResponseDto>>> Get(int contactId)
+    {
+        var userName = HttpContext.Items["userName"] as string;
+
+        var response = new Response<ContactResponseDto>
+        {
+            Data = await _contactService.GetAsync(userName!, contactId)
+        };
+
+        return Ok(response);
     }
 }

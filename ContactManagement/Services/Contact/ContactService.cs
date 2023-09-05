@@ -36,4 +36,23 @@ public class ContactService : IContactService
 
         return _mapper.Map<ContactResponseDto>(createdContact);
     }
+
+    public async Task<ContactResponseDto> GetAsync(string userName, int contactId)
+    {
+        User? user = await _userRepository.GetAsync(userName);
+
+        if (user is null)
+        {
+            throw new ResponseException(HttpStatusCode.NotFound, $"User with username {userName} is not found.");
+        }
+
+        Contact? contact = await _contactRepository.GetAsync(contactId);
+
+        if (contact is null)
+        {
+            throw new ResponseException(HttpStatusCode.NotFound, $"Contact with contactId {contactId} is not found.");
+        }
+
+        return _mapper.Map<ContactResponseDto>(contact);
+    }
 }
