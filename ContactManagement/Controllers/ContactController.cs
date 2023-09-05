@@ -72,11 +72,11 @@ public class ContactController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<Response<List<ContactResponseDto>>>> Search([FromQuery] ContactSearchDto contactSearchDto)
+    public async Task<ActionResult<Response<ContactSearchResultDto>>> Search([FromQuery] ContactSearchDto contactSearchDto)
     {
         var userName = HttpContext.Items["userName"] as string;
 
-        var response = new Response<List<ContactResponseDto>>
+        var response = new Response<ContactSearchResultDto>
         {
             Data = await _contactService.SearchAsync(userName!, contactSearchDto)
         };

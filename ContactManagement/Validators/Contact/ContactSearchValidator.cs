@@ -13,5 +13,9 @@ public class ContactSearchValidator : AbstractValidator<ContactSearchDto>
             .MaximumLength(100);
         RuleFor(x => x.Phone)
             .MaximumLength(100);
+        RuleFor(x => x.Page)
+            .GreaterThan(0);
+        RuleFor(x => x.Size)
+            .GreaterThan(0);
     }
 }

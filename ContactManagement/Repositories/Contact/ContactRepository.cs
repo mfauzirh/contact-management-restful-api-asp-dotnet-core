@@ -1,3 +1,4 @@
+using AutoMapper;
 using ContactManagement.Data;
 using ContactManagement.Dtos;
 using ContactManagement.Models;
@@ -8,10 +9,12 @@ namespace ContactManagement.Repositories;
 public class ContactRepository : IContactRepository
 {
     private readonly DataContext _context;
+    private readonly IMapper _mapper;
 
-    public ContactRepository(DataContext context)
+    public ContactRepository(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     public async Task<Contact> AddAsync(Contact contact)
     {
@@ -32,7 +35,7 @@ public class ContactRepository : IContactRepository
         return await _context.Contacts.FindAsync(contactId);
     }
 
-    public async Task<List<Contact>> SearchAsync(string userName, ContactSearchDto searchBy)
+    public async Task<ContactSearchResultDto> SearchAsync(string userName, ContactSearchDto searchBy)
     {
         var query = _context.Contacts.AsQueryable();
 
@@ -53,9 +56,19 @@ public class ContactRepository : IContactRepository
             query = query.Where(c => c.Phone != null && c.Phone.Contains(searchBy.Phone));
         }
 
+        var totalItems = await query.CountAsync();
+
+        query = query.Skip((searchBy.Page - 1) * searchBy.Size).Take(searchBy.Size);
+
         var contacts = await query.ToListAsync();
 
-        return contacts;
+        return new ContactSearchResultDto
+        {
+            Contacts = _mapper.Map<List<ContactResponseDto>>(contacts),
+            Page = searchBy.Page,
+            TotalItems = totalItems,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)searchBy.Size)
+        };
     }
 
     public async Task<Contact> UpdateAsync(Contact contact)

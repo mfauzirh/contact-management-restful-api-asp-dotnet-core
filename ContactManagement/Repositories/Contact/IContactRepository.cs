@@ -9,5 +9,5 @@ public interface IContactRepository
     Task<Contact?> GetAsync(int contactId);
     Task<Contact> UpdateAsync(Contact contact);
     Task<Contact> DeleteAsync(Contact contact);
-    Task<List<Contact>> SearchAsync(string userName, ContactSearchDto searchBy);
+    Task<ContactSearchResultDto> SearchAsync(string userName, ContactSearchDto searchBy);
 }

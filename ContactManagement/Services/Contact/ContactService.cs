@@ -77,7 +77,7 @@ public class ContactService : IContactService
         return _mapper.Map<ContactResponseDto>(contact);
     }
 
-    public async Task<List<ContactResponseDto>> SearchAsync(string userName, ContactSearchDto contactSearchDto)
+    public async Task<ContactSearchResultDto> SearchAsync(string userName, ContactSearchDto contactSearchDto)
     {
         User? user = await _userRepository.GetAsync(userName);
 
@@ -86,9 +86,9 @@ public class ContactService : IContactService
             throw new ResponseException(HttpStatusCode.NotFound, $"User with username {userName} is not found.");
         }
 
-        List<Contact> contacts = await _contactRepository.SearchAsync(userName, contactSearchDto);
+        ContactSearchResultDto searchResult = await _contactRepository.SearchAsync(userName, contactSearchDto);
 
-        return _mapper.Map<List<ContactResponseDto>>(contacts);
+        return searchResult;
     }
 
     public async Task<ContactResponseDto> UpdateAsync(string userName, int contactId, ContactUpdateDto contactUpdateDto)
