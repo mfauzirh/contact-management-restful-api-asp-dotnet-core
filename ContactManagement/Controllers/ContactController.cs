@@ -44,4 +44,43 @@ public class ContactController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPut("{contactId}")]
+    public async Task<ActionResult<Response<ContactResponseDto>>> Update(int contactId, ContactUpdateDto contactUpdateDto)
+    {
+        var userName = HttpContext.Items["userName"] as string;
+
+        var response = new Response<ContactResponseDto>
+        {
+            Data = await _contactService.UpdateAsync(userName!, contactId, contactUpdateDto)
+        };
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{contactId}")]
+    public async Task<ActionResult<Response<ContactResponseDto>>> Delete(int contactId)
+    {
+        var userName = HttpContext.Items["userName"] as string;
+
+        var response = new Response<ContactResponseDto>
+        {
+            Data = await _contactService.DeleteAsync(userName!, contactId)
+        };
+
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<Response<List<ContactResponseDto>>>> Search([FromQuery] ContactSearchDto contactSearchDto)
+    {
+        var userName = HttpContext.Items["userName"] as string;
+
+        var response = new Response<List<ContactResponseDto>>
+        {
+            Data = await _contactService.SearchAsync(userName!, contactSearchDto)
+        };
+
+        return Ok(response);
+    }
 }
