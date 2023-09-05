@@ -28,4 +28,15 @@ public class UserController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPatch("userName")]
+    public async Task<ActionResult<Response<UserResponseDto>>> Update(string userName, UserUpdateDto request)
+    {
+        var response = new Response<UserResponseDto>()
+        {
+            Data = await _userService.UpdateAsync(userName, request)
+        };
+
+        return Ok(response);
+    }
 }

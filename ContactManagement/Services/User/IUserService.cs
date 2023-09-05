@@ -6,6 +6,6 @@ namespace ContactManagement.Services;
 public interface IUserService
 {
     Task<UserResponseDto> GetAsync(string userName);
-    Task<Response<UserResponseDto>> Update(UserUpdateDto request);
+    Task<UserResponseDto> UpdateAsync(string userName, UserUpdateDto request);
     Task<bool> UserExists(string userName);
 }

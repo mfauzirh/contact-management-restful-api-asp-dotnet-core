@@ -3,6 +3,8 @@ using System.Text.Json;
 using ContactManagement.Exceptions;
 using ContactManagement.Models;
 
+namespace ContactManagement.Middleware;
+
 public class ErrorMiddleware
 {
     private readonly RequestDelegate _next;

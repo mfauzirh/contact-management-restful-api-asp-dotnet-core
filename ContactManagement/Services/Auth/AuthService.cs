@@ -66,7 +66,7 @@ public class AuthService : IAuthService
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.UserName),
+            new(ClaimTypes.NameIdentifier, user.UserName),
         };
 
         string? appSettingsToken = _configuration.GetSection("AppSettings:Token").Value ?? throw new Exception("AppSettings Token is null");

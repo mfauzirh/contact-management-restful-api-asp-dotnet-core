@@ -31,26 +31,21 @@ public class UserService : IUserService
         return _mapper.Map<UserResponseDto>(user);
     }
 
-    public async Task<Response<UserResponseDto>> Update(UserUpdateDto request)
+    public async Task<UserResponseDto> UpdateAsync(string userName, UserUpdateDto request)
     {
-        var response = new Response<UserResponseDto>();
-
-        User? user = await _userRepository.GetAsync(request.UserName);
+        User? user = await _userRepository.GetAsync(userName);
 
         if (user is null)
         {
-            throw new ResponseException(HttpStatusCode.NotFound, $"User with username {request.UserName} is not found.");
+            throw new ResponseException(HttpStatusCode.NotFound, $"User with username {userName} is not found.");
         }
 
-        user.UserName = request.UserName is not null ? request.UserName : user.UserName;
         user.Password = request.Password is not null ? Bcrypt.HashPassword(request.Password) : user.Password;
         user.Name = request.Name is not null ? request.Name : user.Name;
 
         User updatedUser = await _userRepository.UpdateAsync(user);
 
-        response.Data = _mapper.Map<UserResponseDto>(updatedUser);
-
-        return response;
+        return _mapper.Map<UserResponseDto>(updatedUser);
     }
 
     public async Task<bool> UserExists(string userName)
