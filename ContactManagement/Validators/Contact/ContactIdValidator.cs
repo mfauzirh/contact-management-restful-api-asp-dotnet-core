@@ -1,4 +1,3 @@
-using ContactManagement.Dtos;
 using FluentValidation;
 
 namespace ContactManagement.Validators;

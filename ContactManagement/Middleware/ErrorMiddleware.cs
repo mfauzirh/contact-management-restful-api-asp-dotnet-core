@@ -8,10 +8,12 @@ namespace ContactManagement.Middleware;
 public class ErrorMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<ErrorMiddleware> _logger;
 
-    public ErrorMiddleware(RequestDelegate next)
+    public ErrorMiddleware(RequestDelegate next, ILogger<ErrorMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -26,7 +28,7 @@ public class ErrorMiddleware
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message); // change this to logger
+            _logger.LogError(ex, "An unhandled execption occurred");
             await SendErrorResponse(context, "application/json", HttpStatusCode.InternalServerError, "Server error occurred");
         }
     }
