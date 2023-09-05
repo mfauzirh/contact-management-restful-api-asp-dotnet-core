@@ -42,4 +42,37 @@ public class AddressController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPut("/api/contact/{contactId}/address/{addressId}")]
+    public async Task<ActionResult<Response<AddressResponseDto>>> Update(int contactId, int addressId, AddressUpdateDto request)
+    {
+        var response = new Response<AddressResponseDto>
+        {
+            Data = await _addressService.UpdateAsync(contactId, addressId, request)
+        };
+
+        return Ok(response);
+    }
+
+    [HttpDelete("/api/contact/{contactId}/address/{addressId}")]
+    public async Task<ActionResult<Response<AddressResponseDto>>> Delete(int contactId, int addressId)
+    {
+        var response = new Response<AddressResponseDto>
+        {
+            Data = await _addressService.DeleteAsync(contactId, addressId)
+        };
+
+        return Ok(response);
+    }
+
+    [HttpGet("/api/contact/{contactId}/address")]
+    public async Task<ActionResult<Response<List<AddressResponseDto>>>> List(int contactId)
+    {
+        var response = new Response<List<AddressResponseDto>>
+        {
+            Data = await _addressService.ListAsync(contactId)
+        };
+
+        return Ok(response);
+    }
 }

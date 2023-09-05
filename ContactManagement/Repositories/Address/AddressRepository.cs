@@ -20,8 +20,27 @@ public class AddressRepository : IAddressRepository
         return address;
     }
 
+    public async Task<Address> DeleteAsync(Address address)
+    {
+        _context.Addresses.Remove(address);
+        await _context.SaveChangesAsync();
+        return address;
+    }
+
     public async Task<Address?> GetAsync(int contactId, int addressId)
     {
         return await _context.Addresses.FirstOrDefaultAsync(a => a.ContactId == contactId && a.Id == addressId);
+    }
+
+    public async Task<List<Address>> ListAsync(int contactId)
+    {
+        return await _context.Addresses.Where(a => a.ContactId == contactId).ToListAsync();
+    }
+
+    public async Task<Address> UpdateAsync(Address address)
+    {
+        _context.Addresses.Update(address);
+        await _context.SaveChangesAsync();
+        return address;
     }
 }
